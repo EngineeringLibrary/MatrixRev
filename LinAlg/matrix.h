@@ -33,8 +33,13 @@ namespace LinAlg {
             bool isSquare ();
 
             Type& operator() (unsigned row, unsigned column);
-            Type operator() (unsigned  row, unsigned column) const;
-            void operator() (unsigned row, unsigned column, Type number);
+            Type  operator() (unsigned  row, unsigned column) const;
+            void  operator() (unsigned row, unsigned column, Type number);
+//            LinAlg::Matrix<Type>&  operator() (LinAlg::Matrix<unsigned> rows_to_be_returned, LinAlg::Matrix<unsigned> columns_to_be_returned);
+            class rangehandler;
+            LinAlg::Matrix<Type> operator() (rangehandler range, rangehandler range2) const;
+            LinAlg::Matrix<Type> operator() (unsigned row, rangehandler range2) const;
+            LinAlg::Matrix<Type> operator() (rangehandler range, unsigned col) const;
 
             void operator= (std::string rhs);
             LinAlg::Matrix<Type>& operator= (const LinAlg::Matrix<Type>& otherMatrix);
@@ -135,6 +140,8 @@ namespace LinAlg {
     bool operator== (const LinAlg::Matrix<Type>& lhs, const LinAlg::Matrix<Type>& rhs);
     template<typename Type>
     bool operator!= (const LinAlg::Matrix<Type>& lhs, const LinAlg::Matrix<Type>& rhs) {return !(lhs == rhs);}
+
+//    unsigned* operator, (unsigned number1, unsigned number2);
 
     template<typename Type>
     void Zeros (LinAlg::Matrix<Type>& Mat);

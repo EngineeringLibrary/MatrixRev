@@ -303,6 +303,45 @@ void LinAlg::Matrix<Type>::operator() (unsigned row, unsigned column, Type numbe
 }
 
 template<typename Type>
+class LinAlg::Matrix<Type>::rangehandler{
+public:
+    rangehandler(int lower, int upper): lower(lower), upper(upper){};
+    int lower, upper;
+
+};
+
+template<typename Type>
+LinAlg::Matrix<Type> LinAlg::Matrix<Type>::operator() (rangehandler range_rows, rangehandler range_cols) const
+{
+    LinAlg::Matrix<Type> Ret(range_rows.upper - range_rows.lower + 1, range_cols.upper - range_cols.lower + 1);
+    for(unsigned i = range_rows.lower; i <= range_rows.upper; i++)
+        for(unsigned j = range_cols.lower; j <= range_cols.upper ; j++)
+            Ret(i-range_rows.lower+1,j-range_cols.lower+1) = this->mat[i-1][j-1];
+
+    return Ret;
+}
+
+template<typename Type>
+LinAlg::Matrix<Type> LinAlg::Matrix<Type>::operator() (unsigned row, rangehandler range_cols) const
+{
+    LinAlg::Matrix<Type> Ret(1, range_cols.upper - range_cols.lower + 1);
+    for(unsigned j = range_cols.lower; j <= range_cols.upper ; j++)
+        Ret(1,j-range_cols.lower+1) = this->mat[row-1][j-1];
+
+    return Ret;
+}
+
+template<typename Type>
+LinAlg::Matrix<Type> LinAlg::Matrix<Type>::operator() (rangehandler range_rows, unsigned col) const
+{
+    LinAlg::Matrix<Type> Ret(range_rows.upper - range_rows.lower + 1, col);
+    for(unsigned i = range_rows.lower; i <= range_rows.upper; i++)
+        Ret(i-range_rows.lower+1,1) = this->mat[i-1][col-1];
+
+    return Ret;
+}
+
+template<typename Type>
 void LinAlg::Matrix<Type>::operator= (std::string Mat)
 {
     this->Init(Mat);
