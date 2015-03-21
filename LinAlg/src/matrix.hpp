@@ -297,9 +297,79 @@ Type LinAlg::Matrix<Type>::operator() (unsigned row, unsigned column) const
 }
 
 template<typename Type>
-void LinAlg::Matrix<Type>::operator() (unsigned row, unsigned column, Type number)
+LinAlg::Matrix<Type> LinAlg::Matrix<Type>::operator ()(unsigned* row_interval, unsigned* column_interval)const
 {
-    this->Add(row, column, number);
+    LinAlg::Matrix<Type> Ret;
+
+    if(row_interval[0] < row_interval[1]){
+        if(column_interval[0] < column_interval[1]){
+            Ret.Init(row_interval[1] - row_interval[0] + 1, column_interval[1] - column_interval[0] + 1);
+            for(unsigned i = row_interval[0]; i <= row_interval[1]; ++i)
+                for(unsigned j = column_interval[0]; j <= column_interval[1]; ++j)
+                    Ret.mat[i - row_interval[0]][j - column_interval[0]] = this->mat[i-1][j-1];
+
+        }else{
+            Ret.Init(row_interval[1] - row_interval[0] + 1, column_interval[0] - column_interval[1] + 1);
+            for(unsigned i = row_interval[0]; i <= row_interval[1]; ++i)
+                for(unsigned j = column_interval[0]; j >= column_interval[1]; --j)
+                    Ret.mat[i - row_interval[0]][column_interval[0] - j] = this->mat[i-1][j - 1];
+        }
+
+    } else{
+        if(column_interval[0] < column_interval[1]){
+            Ret.Init(row_interval[0] - row_interval[1] + 1, column_interval[1] - column_interval[0] + 1);
+            for(unsigned i = row_interval[0]; i >= row_interval[1]; --i)
+                for(unsigned j = column_interval[0]; j <= column_interval[1]; ++j)
+                    Ret.mat[row_interval[0] - i][j - column_interval[0]] = this->mat[i-1][j-1];
+        }else{
+            Ret.Init(row_interval[0] - row_interval[1] + 1, column_interval[0] - column_interval[1] + 1);
+            for(unsigned i = row_interval[0]; i >= row_interval[1]; --i)
+                for(unsigned j = column_interval[0]; j >= column_interval[1]; --j)
+                    Ret.mat[row_interval[0] - i][column_interval[0] - j] = this->mat[i-1][j - 1];
+        }
+    }
+
+    return Ret;
+}
+
+template<typename Type>
+LinAlg::Matrix<Type> LinAlg::Matrix<Type>::operator ()(unsigned row, unsigned* column_interval)const
+{
+    LinAlg::Matrix<Type> Ret;
+
+
+        if(column_interval[0] < column_interval[1]){
+            Ret.Init(1, column_interval[1] - column_interval[0] + 1);
+            for(unsigned j = column_interval[0]; j <= column_interval[1]; ++j)
+                Ret.mat[row - 1][j - column_interval[0]] = this->mat[row - 1][j - 1];
+
+        }else{
+            Ret.Init(1, column_interval[0] - column_interval[1] + 1);
+            for(unsigned j = column_interval[0]; j >= column_interval[1]; --j)
+                Ret.mat[row - 1][column_interval[0] - j] = this->mat[row - 1][j - 1];
+        }
+
+    return Ret;
+}
+
+template<typename Type>
+LinAlg::Matrix<Type> LinAlg::Matrix<Type>::operator ()(unsigned* row_interval, unsigned column)const
+{
+    LinAlg::Matrix<Type> Ret;
+
+    if(row_interval[0] < row_interval[1]){
+        Ret.Init(row_interval[1] - row_interval[0] + 1, 1);
+        for(unsigned i = row_interval[0]; i <= row_interval[1]; ++i)
+            Ret.mat[i - row_interval[0]][column - 1] = this->mat[i - 1][column - 1];
+    } else{
+        unsigned aux = row_interval[0] - row_interval[1] + 1;
+
+        Ret.Init(row_interval[0] - row_interval[1] + 1, 1);
+        for(unsigned i = row_interval[0]; i >= row_interval[1]; --i)
+            Ret.mat[row_interval[0] - i][column - 1] = this->mat[i - 1][column - 1];
+    }
+
+    return Ret;
 }
 
 template<typename Type>
