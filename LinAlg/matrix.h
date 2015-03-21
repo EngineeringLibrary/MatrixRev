@@ -1,5 +1,6 @@
 #ifndef MATRIX_H
 #define MATRIX_H
+#define _USE_MATH_DEFINES
 
 #include <cmath>
 #include <string>
@@ -27,7 +28,7 @@ namespace LinAlg {
             void SwapRows (unsigned row_to_be_swapped, unsigned  row_to_take_place);
             void SwapColumns (unsigned column_to_be_swapped, unsigned column_to_take_place);
 
-            unsigned Size ();
+            unsigned Size () const;
 
             bool isNull ();
             bool isSquare ();
@@ -62,9 +63,9 @@ namespace LinAlg {
             LinAlg::Matrix<Type>& operator^= (double exp);
 
             template<typename RightType>
-            LinAlg::Matrix<Type> operator| (LinAlg::Matrix<RightType>& rhs);
+            LinAlg::Matrix<Type> operator| (LinAlg::Matrix<RightType> rhs);
             template<typename RightType>
-            LinAlg::Matrix<Type> operator|| (LinAlg::Matrix<RightType>& rhs);
+            LinAlg::Matrix<Type> operator|| (LinAlg::Matrix<RightType> rhs);
 
             template<typename OtherMatrixType>
             void swap (const LinAlg::Matrix<OtherMatrixType>& otherMatrix);
@@ -121,7 +122,7 @@ namespace LinAlg {
     LinAlg::Matrix<Type> operator- (const LinAlg::Matrix<Type>& mat);
 
     template<typename Type>
-    LinAlg::Matrix<Type> operator~ (LinAlg::Matrix<Type>& mat);
+    LinAlg::Matrix<Type> operator~ (LinAlg::Matrix<Type> mat);
 
     template<typename Type>
     LinAlg::Matrix<Type> operator^ (LinAlg::Matrix<Type> lhs, double exp) {return lhs ^= exp;}
